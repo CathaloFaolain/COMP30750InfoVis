@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5.21.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.2.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.20.5"></script>
+</head>
+<body>
+  <div id="vis"/>
+  <script>
+    const spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": {
+    "url": "https://raw.githubusercontent.com/CathaloFaolain/COMP30750InfoVis/main/cost-of-living-2018.csv",
+    "format": {"type": "csv"}
+  },
+  "width": 600,
+  "height": 600,
+  "layer": [
+    {
+      "mark": {"type": "point", "color": "orange"},
+      "encoding": {
+        "x": {
+          "axis": {"title": "Grocery Price", "titleFontSize": 18},
+          "field": "Groceries Index",
+          "type": "quantitative",
+          "scale": {"zero": false}
+        },
+        "y": {
+          "axis": {"title": "Restaurant Price", "titleFontSize": 18},
+          "field": "Restaurant Price Index",
+          "type": "quantitative",
+          "scale": {"zero": false}
+        },
+        "tooltip": {"field": "City", "type": "nominal"}
+      }
+    },
+    {
+      "mark": {"type": "line", "color": "orangered"},
+      "transform": [
+        {"loess": "Groceries Index", "on": "Restaurant Price Index"}
+      ],
+      "encoding": {
+        "x": {
+          "field": "Groceries Index",
+          "type": "quantitative",
+          "scale": {"zero": false}
+        },
+        "y": {
+          "field": "Restaurant Price Index",
+          "type": "quantitative",
+          "scale": {"zero": false}
+        }
+      }
+    }
+  ],
+  "title": {
+    "text": "The Relationship Between the Cost of Groceries and the Restaurant Price",
+    "anchor": "middle",
+    "fontSize": 24
+  },
+  "config": {}
+};
+    vegaEmbed("#vis", spec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+  </script>
+</body>
+</html>
