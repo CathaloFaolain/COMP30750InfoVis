@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5.21.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.2.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.20.5"></script>
+</head>
+<body>
+  <div id="vis"/>
+  <script>
+    const spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": {
+    "url": "https://raw.githubusercontent.com/CathaloFaolain/COMP30750InfoVis/main/cost-of-living-2018.csv",
+    "format": {"type": "csv"}
+  },
+  "width": 800,
+  "height": 600,
+  "transform": [
+    {
+      "calculate": "(datum['Cost of Living Plus Rent Index'])/ (datum['Cost of Living Index'])",
+      "as": "Rent Impact"
+    }
+  ],
+  "mark": "bar",
+  "encoding": {
+    "y": {
+      "axis": {"title": "Number of Cities", "titleFontSize": 18},
+      "aggregate": "count"
+    },
+    "x": {
+      "field": "Rent Impact",
+      "axis": {
+        "title": "Rent Impact (scale based on New York)",
+        "titleFontSize": 18
+      },
+      "bin": {"maxbins": 20},
+      "type": "quantitative"
+    },
+    "color": {
+      "aggregate": "mean",
+      "field": "Cost of Living Index",
+      "type": "quantitative",
+      "scale": {"scheme": "reds"}
+    }
+  },
+  "title": {
+    "fontSize": 24,
+    "text": "Rent Impact on Cost of Living Relative to New York"
+  },
+  "config": {"legend": {"orient": "top-left"}}
+};
+    vegaEmbed("#vis", spec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+  </script>
+</body>
+</html>

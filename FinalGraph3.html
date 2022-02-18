@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5.21.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.2.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.20.5"></script>
+</head>
+<body>
+  <div id="vis"/>
+  <script>
+    const spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": {
+    "url": "https://raw.githubusercontent.com/CathaloFaolain/COMP30750InfoVis/main/cost-of-living-2018.csv",
+    "format": {"type": "csv"}
+  },
+  "width": 1000,
+  "height": 450,
+  "transform": [
+    {"window": [{"op": "count", "as": "index"}]},
+    {
+      "fold": [
+        "Cost of Living Plus Rent Index",
+        "Cost of Living Index",
+        "Rent Index",
+        "Groceries Index",
+        "Restaurant Price Index",
+        "Local Purchasing Power Index"
+      ]
+    }
+  ],
+  "layer": [
+    {
+      "mark": {"type": "rule", "color": "#ccc"},
+      "encoding": {"detail": {"aggregate": "count"}, "x": {"field": "key"}}
+    },
+    {
+      "params": [
+        {"name": "pts", "select": {"type": "interval", "clear": "mouseup"}}
+      ],
+      "mark": {"type": "line", "color": "midnightblue"},
+      "encoding": {
+        "color": {"condition": {"param": "pts"}, "value": "lightgrey"},
+        "detail": {"type": "nominal", "field": "index"},
+        "opacity": {"value": 0.3},
+        "x": {
+          "field": "key",
+          "type": "nominal",
+          "axis": {
+            "title": "City Index Attributes",
+            "titleFontSize": 18,
+            "labelFontSize": 13
+          }
+        },
+        "y": {
+          "field": "value",
+          "type": "quantitative",
+          "axis": {
+            "labelFontSize": 13,
+            "titleFontSize": 18,
+            "title": "Index Value"
+          }
+        },
+        "tooltip": [
+          {"field": "City", "type": "nominal"},
+          {"field": "Cost of Living Plus Rent Index", "type": "quantitative"},
+          {"field": "Cost of Living Index", "type": "quantitative"},
+          {"field": "Rent Index", "type": "quantitative"},
+          {"field": "Groceries Index", "type": "quantitative"},
+          {"field": "Restaurant Price Index", "type": "quantitative"},
+          {"field": "Local Purchasing Power Index", "type": "quantitative"}
+        ]
+      }
+    }
+  ],
+  "title": {
+    "fontSize": 24,
+    "text": "Parallel Coordinate Plot of City Costs of Living"
+  },
+  "config": {}
+};
+    vegaEmbed("#vis", spec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+  </script>
+</body>
+</html>
